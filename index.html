@@ -1,0 +1,918 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Diagnose the Room</title>
+<style>
+  /* ============================================================
+     Diagnose the Room — self-contained styles
+     No external dependencies. Uses system font stack.
+     ============================================================ */
+
+  :root {
+    --bg: #f4f2ec;
+    --panel: #fffdf8;
+    --ink: #24211c;
+    --ink-soft: #55504733;
+    --muted: #6b6558;
+    --line: #e2ddd0;
+    --accent: #3a5a48;      /* muted forest green */
+    --accent-ink: #ffffff;
+    --accent-soft: #eaf0eb;
+    --focus: #b8703a;       /* warm amber for focus rings */
+    --radius: 14px;
+    --maxw: 720px;
+    --shadow: 0 1px 2px rgba(40,36,28,.06), 0 8px 24px rgba(40,36,28,.06);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1a1815;
+      --panel: #242019;
+      --ink: #ece7dc;
+      --ink-soft: #ece7dc22;
+      --muted: #a49c8c;
+      --line: #38332a;
+      --accent: #8fbf9f;
+      --accent-ink: #16130f;
+      --accent-soft: #2a2f28;
+      --focus: #e0a15f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: clamp(16px, 4vw, 40px) clamp(14px, 4vw, 28px) 64px;
+    min-height: 100vh;
+  }
+
+  /* Header / progress ---------------------------------------- */
+  header.topbar {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+
+  .brand {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    letter-spacing: .01em;
+    font-size: 1rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    font-size: .72rem;
+    letter-spacing: .14em;
+  }
+
+  .progress-label {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .72rem;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .progress-track {
+    height: 4px;
+    width: 100%;
+    background: var(--line);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 28px;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    border-radius: 99px;
+    transition: width .5s cubic-bezier(.22,.61,.36,1);
+  }
+
+  /* Panels / scenes ------------------------------------------ */
+  .scene {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: clamp(18px, 4vw, 34px);
+  }
+
+  .kicker {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 10px;
+  }
+
+  h1.title {
+    font-size: clamp(1.5rem, 5vw, 2.1rem);
+    line-height: 1.15;
+    margin: 0 0 12px;
+    letter-spacing: -0.01em;
+  }
+
+  h2.setup-heading {
+    font-size: clamp(1.2rem, 4vw, 1.5rem);
+    line-height: 1.2;
+    margin: 0 0 14px;
+    letter-spacing: -0.01em;
+  }
+
+  .setup {
+    font-size: clamp(1.02rem, 2.6vw, 1.12rem);
+    margin: 0 0 22px;
+    color: var(--ink);
+  }
+  .setup .setting {
+    display: inline-block;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .68rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    padding: 3px 10px;
+    margin-bottom: 14px;
+  }
+
+  .lede {
+    font-size: clamp(1.05rem, 2.8vw, 1.18rem);
+    color: var(--ink);
+    margin: 0 0 24px;
+  }
+
+  .prompt-q {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+
+  /* Choice buttons ------------------------------------------- */
+  .choices {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  button.choice {
+    font-family: inherit;
+    text-align: left;
+    background: var(--panel);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 15px 17px;
+    font-size: 1rem;
+    line-height: 1.45;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, transform .12s ease, box-shadow .18s ease;
+  }
+  button.choice:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  button.choice:active { transform: translateY(1px); }
+  button.choice .choice-letter {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 700;
+    color: var(--accent);
+    margin-right: 8px;
+  }
+
+  /* Consequence / debrief ------------------------------------ */
+  .outcome { margin-top: 4px; }
+
+  .chosen-echo {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .8rem;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+  .chosen-echo strong { color: var(--ink); font-weight: 600; }
+
+  .block-label {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 6px;
+  }
+
+  .consequence {
+    font-size: clamp(1.02rem, 2.6vw, 1.1rem);
+    margin: 0 0 22px;
+    padding-left: 16px;
+    border-left: 3px solid var(--line);
+    color: var(--ink);
+  }
+
+  .debrief {
+    background: var(--accent-soft);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin: 0 0 24px;
+  }
+  .debrief p { margin: 0; font-size: 1rem; }
+
+  /* Buttons row ---------------------------------------------- */
+  .nav-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  button.primary {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 600;
+    font-size: .98rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    padding: 12px 22px;
+    cursor: pointer;
+    transition: transform .12s ease, filter .18s ease;
+  }
+  button.primary:hover { filter: brightness(1.06); }
+  button.primary:active { transform: translateY(1px); }
+
+  button.ghost {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-weight: 600;
+    font-size: .9rem;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 11px 18px;
+    cursor: pointer;
+    transition: border-color .18s ease, color .18s ease;
+  }
+  button.ghost:hover { color: var(--ink); border-color: var(--accent); }
+
+  /* Focus visibility ----------------------------------------- */
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  /* Intro / end specifics ------------------------------------ */
+  .intro-meta {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .82rem;
+    color: var(--muted);
+    margin: 22px 0 26px;
+  }
+  .intro-meta li { margin-bottom: 4px; }
+
+  /* Profile summary bars ------------------------------------- */
+  .profile-list { margin: 8px 0 22px; }
+  .profile-item { margin-bottom: 16px; }
+  .profile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .9rem;
+    margin-bottom: 6px;
+  }
+  .profile-top .name { font-weight: 600; }
+  .profile-top .count { color: var(--muted); font-size: .82rem; }
+  .bar-track {
+    height: 8px;
+    background: var(--line);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    width: 0%;
+    transition: width .7s cubic-bezier(.22,.61,.36,1);
+  }
+  .bar-fill.style-constructivist { background: var(--accent); }
+  .bar-fill.style-transmission { background: #a9814e; }
+  .bar-fill.style-compliance { background: #9a6b6b; }
+
+  .profile-read {
+    font-size: 1.05rem;
+    margin: 4px 0 24px;
+  }
+
+  .reflection {
+    background: var(--accent-soft);
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin: 6px 0 22px;
+  }
+  .reflection .block-label { color: var(--accent); }
+  .reflection .q {
+    font-size: clamp(1.05rem, 2.8vw, 1.18rem);
+    margin: 0 0 14px;
+  }
+
+  .copy-note {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .8rem;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  .footnote {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .78rem;
+    color: var(--muted);
+    margin-top: 30px;
+    line-height: 1.5;
+  }
+
+  /* Scene transition ----------------------------------------- */
+  .fade-enter { animation: fadein .38s ease both; }
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0);
+    white-space: nowrap; border: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: .001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="topbar">
+      <span class="brand">Diagnose&nbsp;the&nbsp;Room</span>
+      <span class="progress-label" id="progressLabel" aria-hidden="true"></span>
+    </header>
+    <div class="progress-track" aria-hidden="true">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <main id="app" aria-live="polite"></main>
+  </div>
+
+<script>
+/* ================================================================
+   DIAGNOSE THE ROOM
+   A branching classroom-scenario simulator on constructivist teaching.
+
+   --------------------------------------------------------------
+   CONTENT LIVES IN THE `SCENARIOS` ARRAY BELOW.
+   Your group can edit wording, add, remove, or reorder scenarios
+   WITHOUT touching the logic further down. See README.md.
+
+   Each choice is tagged with a `style`:
+     "constructivist" - genuine diagnosis / scaffolding to a live ZPD
+     "transmission"   - direct telling / delivering the right answer
+     "compliance"     - enforcing participation; looks active, is control
+   These tags drive the end-screen "diagnostic profile" (no score).
+   ================================================================ */
+
+  const SCENARIOS = [
+    /* -------------------------------------------------------- */
+    {
+      id: "seasons",
+      setting: "In person · 7th-grade science",
+      heading: "The confident wrong answer",
+      setup:
+        "You ask why it's hotter in summer. Maya's hand is up before you finish. " +
+        "“Summer's when Earth is closest to the sun — the orbit's an oval, so we swing in close.” " +
+        "She says it cleanly, and three heads nod. It's wrong, but it's not careless: it's a whole coherent little theory.",
+      prompt: "What do you do next?",
+      choices: [
+        {
+          text: "Tell her that's a common mix-up, then explain axial tilt clearly so the class has the correct model.",
+          style: "transmission",
+          consequence:
+            "You give a tidy two-minute explanation with a tilted globe. Heads nod again — the same nod they gave Maya. " +
+            "The correct words are now in the room, sitting quietly next to the old idea, which nobody has actually put down.",
+          debrief:
+            "Correcting by telling swaps one memorized sentence for another. The flawed schema isn't gone; it's just unspoken. " +
+            "Von Glasersfeld's point is that learners build knowledge from their own existing structures — a better answer handed over the top rarely dislodges the one underneath."
+        },
+        {
+          text: "Ask: “If being closer means hotter, what season is it in Australia right now while we're in summer?”",
+          style: "constructivist",
+          consequence:
+            "Maya opens her mouth, stops. Someone mutters “wait, it's winter there.” The clean theory now has a crack in it, " +
+            "and the room leans toward the crack. Maya starts re-drawing the orbit on her own, muttering about which parts face the sun.",
+          debrief:
+            "You created disequilibrium — the Piagetian moment where a working idea meets evidence it can't absorb. " +
+            "You didn't supply the answer; you made the current answer feel incomplete, which is the condition under which a learner rebuilds the schema themselves."
+        },
+        {
+          text: "Say “Interesting — turn to a partner and each share your own theory of the seasons,” then take a show of hands.",
+          style: "compliance",
+          consequence:
+            "The room fills with talk and you check the box for discussion. But most pairs just repeat Maya's confident version to each other, " +
+            "and the show of hands rewards volume, not reasoning. The wrong model gets rehearsed out loud and lands with a majority vote behind it.",
+          debrief:
+            "This looks constructivist — talk, hands, participation — but activity isn't the same as cognitive conflict. " +
+            "Gulati's caution is that structured participation can perform engagement while leaving thinking untouched. Sharing an idea is not the same as testing it."
+        }
+      ]
+    },
+
+    /* -------------------------------------------------------- */
+    {
+      id: "dominator",
+      setting: "In person · Undergraduate seminar",
+      heading: "One voice, two silences",
+      setup:
+        "Fifteen minutes into the small-group discussion, Devon has answered every question — well, actually. " +
+        "But Priya hasn't spoken since the first minute, and Sam has physically angled his chair out of the circle. " +
+        "Devon glances at you for the next prompt, ready to take it too.",
+      prompt: "You step in. How?",
+      choices: [
+        {
+          text: "Thank Devon, then say: “Let's hear from someone who hasn't gone yet — Sam, Priya, what landed or bugged you?”",
+          style: "compliance",
+          consequence:
+            "Sam gives a four-word answer to make the spotlight move on. Priya says “I agree with Devon.” " +
+            "You got two new voices on the record, and the silence in the room got a little more careful.",
+          debrief:
+            "Naming quiet students to talk raises the participation count but can raise the stakes past their ZPD — answering cold, in front of peers, with no scaffold. " +
+            "Gulati's critique lands here: mandated speaking measures compliance, not learning, and can teach quiet students that being called on is a threat."
+        },
+        {
+          text: "Pose a question, give 90 seconds of silent writing, then have everyone share what they wrote with one neighbor before any group talk.",
+          style: "constructivist",
+          consequence:
+            "The room goes quiet in a working way. Sam's pen moves. When pairs talk, Priya tells her neighbor a genuinely sharp objection — " +
+            "and when you reopen the circle, she's willing to say the thing she already said once, to one person, successfully.",
+          debrief:
+            "You scaffolded the gap between thinking and speaking: write-first lowers the cost of a first draft, pair-share rehearses it in a low-risk setting. " +
+            "That's calibrating the task to the learner's zone of proximal development — building a rung, not just demanding the climb."
+        },
+        {
+          text: "Let Devon keep going — he's raising the level and the others can learn from a strong model right now.",
+          style: "transmission",
+          consequence:
+            "Devon is genuinely good, and the discussion sounds excellent. It's also, functionally, a lecture delivered by a peer. " +
+            "Sam's chair finishes its slow rotation until he's facing the window.",
+          debrief:
+            "A strong voice modeling good thinking feels productive, but for everyone else it's transmission — watching someone else construct meaning. " +
+            "Powell and Kalina emphasize that social construction requires learners in the act of building, not spectating one classmate who already can."
+        }
+      ]
+    },
+
+    /* -------------------------------------------------------- */
+    {
+      id: "lurker",
+      setting: "Online · Asynchronous course",
+      heading: "The student who never posts",
+      setup:
+        "Rule on your syllabus: three discussion-forum posts a week, graded. Rosa has posted twice all term. " +
+        "But her written assignments are the best in the class — she's clearly reading everything and thinking hard, " +
+        "she quotes classmates' posts in her essays. The forum, though, stays empty where her name should be.",
+      prompt: "It's week 6. What do you do?",
+      choices: [
+        {
+          text: "Email a reminder that posts are 20% of the grade, and that not posting shortchanges the learning community.",
+          style: "compliance",
+          consequence:
+            "Rosa immediately posts three times that week. Each is a competent paragraph ending in “Great point, I agree!” " +
+            "posted at 11:52pm on the due night. The count is satisfied. The posts are furniture.",
+          debrief:
+            "This is the trap. Requiring posts produces posts — but the version that shows up is compliance, not community. " +
+            "Gulati specifically challenges mandatory online participation: forcing the quiet student to perform can manufacture hollow talk while calling it collaboration."
+        },
+        {
+          text: "Message her privately: “Your essays quote the discussions beautifully. I'd love the class to see that thinking — would a couple of 'reply' posts feel workable?”",
+          style: "constructivist",
+          consequence:
+            "Rosa writes back that she rereads threads three times before she'd dare post, and by then it feels too late. " +
+            "You suggest she reply to one specific person by Friday. Her next post is a real, pointed disagreement — the first genuine debate the forum has had in weeks.",
+          debrief:
+            "You diagnosed before prescribing: the silence was processing style and a too-high bar, not disengagement. " +
+            "Scaffolding a narrow, lower-stakes entry (reply to one person, by Friday) meets a real learner where she is — the diagnostic loop, not the blanket rule."
+        },
+        {
+          text: "Drop the posting requirement for her and grade her on the essays, since those clearly show the learning.",
+          style: "transmission",
+          consequence:
+            "Rosa is relieved and her essays stay excellent. She also never once encounters the friction of putting a half-formed idea in front of peers " +
+            "and defending it — and the class never gets access to the best reader in the room.",
+          debrief:
+            "Excusing her honors the individual but quietly declares that meaning is made alone, on the page, and handed in. " +
+            "Powell and Kalina's social constructivism treats peer negotiation as part of the learning itself — not an optional delivery format for a solo product."
+        }
+      ]
+    },
+
+    /* -------------------------------------------------------- */
+    {
+      id: "silence",
+      setting: "Online · Synchronous video call",
+      heading: "Question into the void",
+      setup:
+        "Live class, twenty-two names in the grid, most cameras off. You ask a real, open question and then — nothing. " +
+        "Six seconds of it. On a video call you can't read the room: no shifting in seats, no almost-raised hands, " +
+        "no faces to tell you if this is thinking-silence or lost-silence.",
+      prompt: "The silence is stretching. You…",
+      choices: [
+        {
+          text: "Answer your own question to keep momentum, then move on — dead air on a call is its own problem.",
+          style: "transmission",
+          consequence:
+            "You fill the gap smoothly and the lesson keeps its pace. It also quietly teaches twenty-two people that if they wait eight seconds, " +
+            "the answer arrives for free. Next question, the silence comes faster.",
+          debrief:
+            "Rescuing the silence relieves your discomfort and converts the moment into transmission. " +
+            "Singh and colleagues frame online teaching around presence — and instructor presence isn't filling every gap; sometimes it's visibly, patiently holding one open."
+        },
+        {
+          text: "Say: “No wrong answers here — drop a word or a half-thought in the chat, everyone, even a question mark,” and wait.",
+          style: "constructivist",
+          consequence:
+            "For a few seconds, nothing. Then the chat unspools: a guess, a “???”, a genuinely good half-idea, someone answering someone else. " +
+            "You now have the visible thinking the missing faces were hiding, and three threads to pull on.",
+          debrief:
+            "You rebuilt the missing bandwidth instead of mourning it. Lowering the stakes ('a word, a question mark') and switching to a channel that fits the medium " +
+            "restores the read on where learners actually are — the diagnosis online presence is supposed to make possible."
+        },
+        {
+          text: "Cold-call from the roster — “Jordan, camera on, what do you think?” — to get things moving.",
+          style: "compliance",
+          consequence:
+            "Jordan's camera comes on a beat late; “Sorry, can you repeat the question?” The rest of the grid goes very still, " +
+            "each person now calculating the odds of being next. You got one voice and twenty-one people bracing.",
+          debrief:
+            "Cold-calling breaks silence by force and reads as engagement, but it manages compliance, not understanding. " +
+            "Without the presence cues that make it feel safe, Singh and colleagues' concern is sharpened: pressure in a low-presence space raises anxiety faster than it raises thinking."
+        }
+      ]
+    },
+
+    /* -------------------------------------------------------- */
+    {
+      id: "drift",
+      setting: "Online · Asynchronous discussion",
+      heading: "The thread that wandered off",
+      setup:
+        "You assigned a discussion on chapter 7's framework. Three days in, the thread has drifted — it's now a genuinely rich argument " +
+        "about a current news event, with students building on each other, citing sources, changing their minds. " +
+        "It's real collaborative meaning-making. It is also almost entirely not about chapter 7.",
+      prompt: "You're reading it Thursday night. You…",
+      choices: [
+        {
+          text: "Post a redirect: “Great energy, everyone! Let's bring this back to the chapter 7 framework — how does it apply here?”",
+          style: "compliance",
+          consequence:
+            "The thread stops mid-argument. A few dutiful posts arrive, each bolting the phrase “chapter 7 framework” onto what they were already saying. " +
+            "The living debate cools to room temperature and files itself under the correct heading.",
+          debrief:
+            "Steering it back to the assigned topic keeps you in control of the syllabus and reads as rigor — but it overrides learner-negotiated meaning to reassert a tutor-defined one. " +
+            "Gulati's distinction: when the teacher owns the topic absolutely, participation bends toward performing the required frame rather than thinking."
+        },
+        {
+          text: "Join the argument as a participant, and drop in one question that quietly links their debate to chapter 7's ideas.",
+          style: "constructivist",
+          consequence:
+            "You post as a fellow arguer, not a referee — and add “isn't this the same tension chapter 7 calls X?” " +
+            "Two students pick it up immediately: the news debate is suddenly a live test case for the framework, and nobody's momentum broke.",
+          debrief:
+            "You honored the learner-negotiated topic and scaffolded a bridge back to the objective from inside it. " +
+            "That's the constructivist balance Powell and Kalina describe: the teacher as a co-constructor guiding meaning, not a gatekeeper enforcing a predefined route to it."
+        },
+        {
+          text: "Leave it be and post the chapter 7 content as a short explainer of your own so the required material is still covered.",
+          style: "transmission",
+          consequence:
+            "Your explainer is clear and complete, and it sinks to the bottom of the thread with two likes. " +
+            "The students keep arguing about the news; your chapter 7 content sits beside their learning like a pamphlet on a busy table.",
+          debrief:
+            "Covering the material by delivering it protects the syllabus but concedes that the real construction and the required content are two separate tracks. " +
+            "Von Glasersfeld's view is that knowledge has to be built by the learner — a well-made explanation running parallel to their thinking is not the same as their thinking arriving there."
+        }
+      ]
+    }
+  ];
+
+  /* ---------- Style metadata used on the end screen ---------- */
+  const STYLE_META = {
+    constructivist: {
+      label: "Diagnose & scaffold",
+      blurb: "You read where the learner actually was and built a rung to the next step."
+    },
+    transmission: {
+      label: "Tell & deliver",
+      blurb: "You reached for the clear, correct explanation and handed it over."
+    },
+    compliance: {
+      label: "Structure & enforce",
+      blurb: "You reached for participation and control — activity that looks constructivist but manages behavior."
+    }
+  };
+
+  /* Short second-person read-outs keyed by which style dominated. */
+  function profileReadout(counts) {
+    const total = counts.constructivist + counts.transmission + counts.compliance;
+    const c = counts.constructivist, t = counts.transmission, k = counts.compliance;
+    const max = Math.max(c, t, k);
+    const leaders = ["constructivist","transmission","compliance"].filter(s => counts[s] === max);
+
+    if (c === total) {
+      return "Across every moment you stayed in the diagnostic loop — reading the learner, then adjusting the support. Worth asking: where did holding that line cost you the most, and what made it possible?";
+    }
+    if (leaders.length > 1) {
+      return "You moved between styles rather than settling into one — which is honest. The interesting question is what tipped you: which conditions pulled you toward telling or toward enforcing, and were those the moments the learners most needed the opposite?";
+    }
+    if (leaders[0] === "constructivist") {
+      return "You leaned toward diagnosis and scaffolding, but not everywhere. Look at the moments you didn't — they're usually the ones where bandwidth got thin or the clock got loud. That's exactly where constructivist teaching is hardest to hold.";
+    }
+    if (leaders[0] === "transmission") {
+      return "You leaned on clear, direct telling. It's the instinct of someone who knows the material and wants it in the room — the risk is that a well-delivered answer can sit right on top of a learner's idea without ever moving it.";
+    }
+    return "You leaned on structure and required participation — often when bandwidth got thin. It's the well-meaning move that most convincingly imitates constructivism, which is exactly why Gulati flags it: activity got managed, but it's worth asking whether thinking did.";
+  }
+
+  /* ================================================================
+     LOGIC BELOW — content editors normally don't need to change this.
+     ================================================================ */
+
+  const app = document.getElementById("app");
+  const progressFill = document.getElementById("progressFill");
+  const progressLabel = document.getElementById("progressLabel");
+
+  const state = {
+    index: -1,               // -1 = intro; 0..n-1 = scenarios; n = end
+    counts: { constructivist: 0, transmission: 0, compliance: 0 },
+    picks: []                // record of chosen styles per scenario
+  };
+
+  function setProgress() {
+    const n = SCENARIOS.length;
+    if (state.index < 0) {
+      progressLabel.textContent = "";
+      progressFill.style.width = "0%";
+    } else if (state.index >= n) {
+      progressLabel.textContent = "Debrief";
+      progressFill.style.width = "100%";
+    } else {
+      progressLabel.textContent = "Moment " + (state.index + 1) + " of " + n;
+      progressFill.style.width = ((state.index) / n * 100) + "%";
+    }
+  }
+
+  function mount(node) {
+    app.innerHTML = "";
+    node.classList.add("fade-enter");
+    app.appendChild(node);
+    // Move keyboard focus to the new scene's heading for screen-reader + keyboard users.
+    const focusTarget = node.querySelector("[data-autofocus]");
+    if (focusTarget) focusTarget.focus();
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }
+
+  function el(tag, attrs, children) {
+    const n = document.createElement(tag);
+    if (attrs) for (const k in attrs) {
+      if (k === "class") n.className = attrs[k];
+      else if (k === "html") n.innerHTML = attrs[k];
+      else if (k === "text") n.textContent = attrs[k];
+      else n.setAttribute(k, attrs[k]);
+    }
+    if (children) children.forEach(c => c && n.appendChild(c));
+    return n;
+  }
+
+  /* ---------- Intro screen ---------- */
+  function renderIntro() {
+    setProgress();
+    const scene = el("section", { class: "scene" });
+    scene.appendChild(el("p", { class: "kicker", text: "A constructivist teaching simulation" }));
+    scene.appendChild(el("h1", { class: "title", tabindex: "-1", "data-autofocus": "", text: "Diagnose the Room" }));
+    scene.appendChild(el("p", { class: "lede", html:
+      "Good constructivist teaching isn't a <em>type of activity</em> you schedule. It's a real-time diagnostic loop — " +
+      "reading where a learner's thinking actually sits, then calibrating your next move to it." }));
+    scene.appendChild(el("p", { class: "setup", html:
+      "You'll face five short classroom moments — in person and online. Each time you choose what happens next. " +
+      "There are no grades and no failure state: your choices build a picture of how you tend to respond when the room gets hard to read." }));
+
+    const meta = el("ul", { class: "intro-meta" });
+    ["Five moments, about 5–8 minutes.",
+     "Every choice is something a real, thoughtful teacher does.",
+     "You'll end with a profile of your tendencies and a question to take to the forum."
+    ].forEach(t => meta.appendChild(el("li", { text: t })));
+    scene.appendChild(meta);
+
+    const row = el("div", { class: "nav-row" });
+    const start = el("button", { class: "primary", type: "button", text: "Enter the first room →" });
+    start.addEventListener("click", () => { state.index = 0; renderScenario(); });
+    row.appendChild(start);
+    scene.appendChild(row);
+
+    mount(scene);
+  }
+
+  /* ---------- A scenario (question state) ---------- */
+  function renderScenario() {
+    setProgress();
+    const s = SCENARIOS[state.index];
+    const scene = el("section", { class: "scene" });
+
+    scene.appendChild(el("span", { class: "setting", text: s.setting }));
+    scene.appendChild(el("h2", { class: "setup-heading", tabindex: "-1", "data-autofocus": "", text: s.heading }));
+    scene.appendChild(el("p", { class: "setup", text: s.setup }));
+    scene.appendChild(el("p", { class: "prompt-q", text: s.prompt }));
+
+    const choices = el("div", { class: "choices" });
+    const letters = ["A", "B", "C", "D", "E"];
+    s.choices.forEach((choice, i) => {
+      const btn = el("button", { class: "choice", type: "button" });
+      const letter = el("span", { class: "choice-letter", "aria-hidden": "true", text: letters[i] });
+      btn.appendChild(letter);
+      btn.appendChild(document.createTextNode(choice.text));
+      btn.addEventListener("click", () => choose(s, choice, letters[i]));
+      choices.appendChild(btn);
+    });
+    scene.appendChild(choices);
+
+    mount(scene);
+  }
+
+  /* ---------- Record a pick, show outcome ---------- */
+  function choose(scenario, choice, letter) {
+    state.counts[choice.style] += 1;
+    state.picks.push({ id: scenario.id, style: choice.style });
+    renderOutcome(scenario, choice, letter);
+  }
+
+  /* ---------- Outcome + debrief state ---------- */
+  function renderOutcome(scenario, choice, letter) {
+    const scene = el("section", { class: "scene" });
+
+    scene.appendChild(el("span", { class: "setting", text: scenario.setting }));
+    scene.appendChild(el("h2", { class: "setup-heading", tabindex: "-1", "data-autofocus": "", text: scenario.heading }));
+    scene.appendChild(el("p", { class: "chosen-echo", html:
+      "You chose <strong>" + letter + "</strong> — " + escapeHtml(choice.text) }));
+
+    scene.appendChild(el("p", { class: "block-label", text: "What happens" }));
+    scene.appendChild(el("p", { class: "consequence", text: choice.consequence }));
+
+    const debrief = el("div", { class: "debrief" });
+    debrief.appendChild(el("p", { class: "block-label", text: "The principle" }));
+    debrief.appendChild(el("p", { text: choice.debrief }));
+    scene.appendChild(debrief);
+
+    const row = el("div", { class: "nav-row" });
+    const isLast = state.index >= SCENARIOS.length - 1;
+    const next = el("button", { class: "primary", type: "button",
+      text: isLast ? "See your diagnostic profile →" : "Next moment →" });
+    next.addEventListener("click", () => {
+      state.index += 1;
+      if (state.index >= SCENARIOS.length) renderEnd();
+      else renderScenario();
+    });
+    row.appendChild(next);
+    scene.appendChild(row);
+
+    mount(scene);
+  }
+
+  /* ---------- End screen: profile + reflection ---------- */
+  function renderEnd() {
+    setProgress();
+    const scene = el("section", { class: "scene" });
+    scene.appendChild(el("p", { class: "kicker", text: "Your diagnostic profile" }));
+    scene.appendChild(el("h1", { class: "title", tabindex: "-1", "data-autofocus": "", text: "How you read the room" }));
+    scene.appendChild(el("p", { class: "setup", html:
+      "No score — that framing would miss the point. Here's the mix of moves you reached for across the five moments." }));
+
+    const total = SCENARIOS.length;
+    const order = ["constructivist", "transmission", "compliance"];
+    const list = el("div", { class: "profile-list" });
+    order.forEach(style => {
+      const count = state.counts[style];
+      const meta = STYLE_META[style];
+      const item = el("div", { class: "profile-item" });
+      const top = el("div", { class: "profile-top" });
+      top.appendChild(el("span", { class: "name", text: meta.label }));
+      top.appendChild(el("span", { class: "count", text: count + " of " + total }));
+      item.appendChild(top);
+      const track = el("div", { class: "bar-track" });
+      const fill = el("div", { class: "bar-fill style-" + style });
+      track.appendChild(fill);
+      item.appendChild(track);
+      item.appendChild(el("p", { class: "copy-note", style: "margin-top:6px;", text: meta.blurb }));
+      list.appendChild(item);
+      // Animate width after mount.
+      requestAnimationFrame(() => { fill.style.width = (count / total * 100) + "%"; });
+    });
+    scene.appendChild(list);
+
+    scene.appendChild(el("p", { class: "profile-read", text: profileReadout(state.counts) }));
+
+    const reflection = el("div", { class: "reflection" });
+    reflection.appendChild(el("p", { class: "block-label", text: "Take this to the forum" }));
+    const question =
+      "Think of a moment you taught (or were taught) where the room got hard to read. " +
+      "Which move did you reach for — diagnosing, telling, or enforcing participation — and what would it have taken to reach for a different one?";
+    reflection.appendChild(el("p", { class: "q", id: "reflectionQ", text: question }));
+    const copyRow = el("div", { class: "nav-row" });
+    const copyBtn = el("button", { class: "primary", type: "button", text: "Copy the question" });
+    const copyNote = el("span", { class: "copy-note", id: "copyNote", "aria-live": "polite", text: "" });
+    copyBtn.addEventListener("click", () => copyText(question, copyNote));
+    copyRow.appendChild(copyBtn);
+    copyRow.appendChild(copyNote);
+    reflection.appendChild(copyRow);
+    scene.appendChild(reflection);
+
+    const row = el("div", { class: "nav-row" });
+    const restart = el("button", { class: "ghost", type: "button", text: "↺ Walk through the rooms again" });
+    restart.addEventListener("click", () => {
+      state.index = -1;
+      state.counts = { constructivist: 0, transmission: 0, compliance: 0 };
+      state.picks = [];
+      renderIntro();
+    });
+    row.appendChild(restart);
+    scene.appendChild(row);
+
+    scene.appendChild(el("p", { class: "footnote", html:
+      "This activity draws on ideas from Powell &amp; Kalina (2009), Singh, Steele &amp; Singh (2021), Schrader (2015), " +
+      "Gulati (2008), and von Glasersfeld (2008). Principles are named in plain language; formal citations accompany the presentation." }));
+
+    mount(scene);
+  }
+
+  /* ---------- Helpers ---------- */
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, m => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[m]));
+  }
+
+  function copyText(text, noteEl) {
+    const done = () => { noteEl.textContent = "Copied ✓"; setTimeout(() => { noteEl.textContent = ""; }, 2600); };
+    const fail = () => {
+      // Fallback for iframes / older browsers without async clipboard.
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "absolute";
+      ta.style.left = "-9999px";
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); noteEl.textContent = "Copied ✓"; }
+      catch (e) { noteEl.textContent = "Select the text above to copy."; }
+      document.body.removeChild(ta);
+      setTimeout(() => { noteEl.textContent = ""; }, 2600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(fail);
+    } else {
+      fail();
+    }
+  }
+
+  /* Enter/Space already activate native <button> elements; nothing extra needed.
+     Kick things off. */
+  renderIntro();
+</script>
+</body>
+</html>
