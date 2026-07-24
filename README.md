@@ -6,7 +6,9 @@ presentation on **constructivism**.
 The visitor is handed a teaching scenario and one shared pool of ten strategies.
 They drag (or tap) exactly **three** strategies into a lesson canvas and get a
 qualitative read on how that combination fits *this* context. They do it three
-times — once online/asynchronous, once in person, once hybrid.
+times, across three K-12 settings — a fully online middle-school Language Arts
+course, an in-person high-school biology lab, and a blended high-school U.S.
+History class with some students remote.
 
 **The thesis:** constructivist *content and endpoints* travel across contexts, but
 *facilitation and scaffolding* do not. The activity makes this concrete by reusing
@@ -27,6 +29,11 @@ requests, and **no** `localStorage`/`sessionStorage`, so it runs inside a sandbo
 iframe. It is responsive to ~360px, works fully on touch **without drag** (tap to
 place, tap to remove), is keyboard operable with visible focus, respects
 `prefers-reduced-motion`, and adapts to light/dark system themes.
+
+The layout is deliberately **compact for a tight embed**: the canvas is always a
+single 3-across row (it never stacks into three tall rows), the strategy pool is a
+wrapping cloud of short chips rather than a full-width list, and padding and copy
+are trimmed. At 360px wide the tallest screen (the builder) is roughly 700px tall.
 
 ### How the interaction works
 
@@ -59,9 +66,9 @@ first.
    - **Netlify Drop** (<https://app.netlify.com/drop>) — drag the file in, get a URL.
 2. In Google Sites, open your page and click **Insert → Embed**.
 3. Choose the **By URL** tab, paste the public URL, and click **Insert**.
-4. Drag the block to resize it. Give it generous height — the pool plus canvas is
-   tall on phones. A width that fills the column and a height around **760–860px**
-   works well.
+4. Drag the block to resize it. A width that fills the column and a height around
+   **720–780px** comfortably fits the tallest screen; on wider desktops it needs
+   less. Let the iframe scroll if a viewer's device runs shorter.
 
 ### Option B — Paste the code directly
 
@@ -93,13 +100,15 @@ the machinery and shouldn't need touching to change wording, tiers, or feedback.
 ### 1. `STRATEGIES` — the one shared pool of ten chips
 
 ```js
-{ id: 3, func: "collab", label: "Small-group breakout with a shared task" }
+{ id: 3, func: "collab", label: "Small-group task" }
 ```
 
 - `id` — a stable number. **Keep it unchanged** once set; the scenarios refer to
   strategies by this id.
-- `label` — the text on the chip. Keep labels short; chips are uniform in size on
-  purpose so nothing telegraphs quality.
+- `label` — the text on the chip. **Keep labels short (2–4 words)** — they have to
+  fit inside a 3-across canvas slot at 360px wide, so long labels will make the
+  canvas grow tall again. Chips are uniform in styling on purpose so nothing
+  telegraphs quality.
 - `func` — the *job* the strategy does. This drives the whole-combination feedback
   (e.g. "nothing here reads where learners are"). Use one of:
   `anchor`, `collab`, `ownership`, `presence`, `diagnosis`, `compliance`,

@@ -6,8 +6,8 @@
 <title>Build the Lesson</title>
 <style>
   /* ============================================================
-     Build the Lesson — self-contained styles
-     No external dependencies. System font stack. Light/dark aware.
+     Build the Lesson — self-contained, compact for iframe embeds.
+     No external dependencies. System fonts. Light/dark aware.
      ============================================================ */
   :root {
     --bg: #f4f2ec;
@@ -15,7 +15,7 @@
     --ink: #24211c;
     --muted: #6b6558;
     --line: #e2ddd0;
-    --accent: #3a5a48;      /* muted forest green */
+    --accent: #3a5a48;
     --accent-ink: #ffffff;
     --accent-soft: #eaf0eb;
     --chip: #fffdf8;
@@ -25,252 +25,176 @@
     --workable: #9a7636;
     --weak: #97595a;
     --focus: #b8703a;
-    --radius: 14px;
-    --maxw: 760px;
-    --shadow: 0 1px 2px rgba(40,36,28,.06), 0 8px 24px rgba(40,36,28,.06);
+    --radius: 12px;
+    --maxw: 720px;
+    --shadow: 0 1px 2px rgba(40,36,28,.06), 0 6px 18px rgba(40,36,28,.05);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #1a1815;
-      --panel: #242019;
-      --ink: #ece7dc;
-      --muted: #a49c8c;
-      --line: #38332a;
-      --accent: #8fbf9f;
-      --accent-ink: #16130f;
-      --accent-soft: #2a2f28;
-      --chip: #2b271f;
-      --chip-line: #423c31;
-      --slot: #201d17;
-      --strong: #8fbf9f;
-      --workable: #d6ab63;
-      --weak: #d69a9a;
-      --focus: #e0a15f;
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.35);
+      --bg: #1a1815; --panel: #242019; --ink: #ece7dc; --muted: #a49c8c;
+      --line: #38332a; --accent: #8fbf9f; --accent-ink: #16130f; --accent-soft: #2a2f28;
+      --chip: #2b271f; --chip-line: #423c31; --slot: #201d17;
+      --strong: #8fbf9f; --workable: #d6ab63; --weak: #d69a9a; --focus: #e0a15f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 22px rgba(0,0,0,.32);
     }
   }
 
   * { box-sizing: border-box; }
   html, body {
-    margin: 0; padding: 0;
-    background: var(--bg); color: var(--ink);
+    margin: 0; padding: 0; background: var(--bg); color: var(--ink);
     font-family: ui-serif, Georgia, "Iowan Old Style", "Times New Roman", serif;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
+    line-height: 1.45; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
   }
   .sans { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
 
   .wrap {
-    max-width: var(--maxw);
-    margin: 0 auto;
-    padding: clamp(16px, 4vw, 40px) clamp(14px, 4vw, 28px) 64px;
-    min-height: 100vh;
+    max-width: var(--maxw); margin: 0 auto;
+    padding: clamp(10px, 2.5vw, 26px) clamp(10px, 3vw, 24px) 32px;
   }
 
   header.topbar {
     display: flex; align-items: baseline; justify-content: space-between;
-    gap: 12px; flex-wrap: wrap; margin-bottom: 18px;
+    gap: 10px; margin-bottom: 8px;
   }
   .brand {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .72rem; letter-spacing: .14em; text-transform: uppercase;
-    font-weight: 700; color: var(--muted);
+    font-size: .66rem; letter-spacing: .13em; text-transform: uppercase; font-weight: 700; color: var(--muted);
   }
   .progress-label {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+    font-size: .66rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted); white-space: nowrap;
   }
-  .progress-track {
-    height: 4px; width: 100%; background: var(--line);
-    border-radius: 99px; overflow: hidden; margin-bottom: 26px;
-  }
-  .progress-fill {
-    height: 100%; width: 0%; background: var(--accent);
-    border-radius: 99px; transition: width .5s cubic-bezier(.22,.61,.36,1);
-  }
+  .progress-track { height: 3px; width: 100%; background: var(--line); border-radius: 99px; overflow: hidden; margin-bottom: 14px; }
+  .progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 99px; transition: width .45s cubic-bezier(.22,.61,.36,1); }
 
   .scene {
     background: var(--panel); border: 1px solid var(--line);
     border-radius: var(--radius); box-shadow: var(--shadow);
-    padding: clamp(18px, 4vw, 32px);
+    padding: clamp(13px, 3vw, 22px);
   }
 
   .kicker {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .7rem; font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--accent); margin: 0 0 10px;
+    font-size: .66rem; font-weight: 600; letter-spacing: .11em; text-transform: uppercase; color: var(--accent); margin: 0 0 6px;
   }
-  h1.title { font-size: clamp(1.5rem, 5vw, 2rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -0.01em; }
-  h2.stitle { font-size: clamp(1.2rem, 4vw, 1.45rem); line-height: 1.2; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h1.title { font-size: clamp(1.35rem, 4.5vw, 1.7rem); line-height: 1.12; margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2.stitle { font-size: clamp(1.12rem, 3.6vw, 1.32rem); line-height: 1.18; margin: 0 0 6px; letter-spacing: -0.01em; }
 
   .mode-tag {
     display: inline-block;
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
-    border: 1px solid var(--line); border-radius: 99px; padding: 3px 10px; margin-bottom: 12px;
+    font-size: .62rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 99px; padding: 2px 9px; margin-bottom: 8px;
   }
-  .setup { font-size: clamp(1.02rem, 2.6vw, 1.12rem); margin: 0 0 20px; }
-  .lede  { font-size: clamp(1.05rem, 2.8vw, 1.16rem); margin: 0 0 20px; }
+  .setup { font-size: .98rem; margin: 0 0 12px; }
+  .lede  { font-size: 1.02rem; margin: 0 0 12px; }
+  .tiny-hint {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .74rem; color: var(--muted); margin: 0 0 14px;
+  }
 
   .section-label {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--muted); margin: 0 0 10px;
+    font-size: .64rem; font-weight: 700; letter-spacing: .11em; text-transform: uppercase; color: var(--muted);
+    margin: 0 0 7px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px;
   }
+  .section-label .count { font-weight: 600; letter-spacing: .04em; text-transform: none; }
+  .section-label .count.ready { color: var(--accent); }
 
-  /* Canvas ---------------------------------------------------- */
+  /* Canvas: always 3 across, even at 360px --------------------- */
   .canvas {
-    border: 1.5px dashed var(--chip-line);
-    border-radius: 12px;
-    background: var(--slot);
-    padding: 12px;
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 10px;
-    margin-bottom: 8px;
-    transition: border-color .18s ease, background .18s ease;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px;
+    border: 1.5px dashed var(--chip-line); border-radius: 10px; background: var(--slot);
+    padding: 8px; margin-bottom: 14px;
+    transition: border-color .16s ease, background .16s ease;
   }
-  @media (min-width: 520px) { .canvas { grid-template-columns: repeat(3, 1fr); } }
   .canvas.drag-over { border-color: var(--accent); background: var(--accent-soft); }
-
-  .slot {
-    min-height: 68px;
-    border-radius: 10px;
-    border: 1px solid transparent;
-    display: flex; align-items: center; justify-content: center;
-    padding: 6px;
-  }
-  .slot.empty {
-    border: 1px dashed var(--chip-line);
-    color: var(--muted);
+  .slot { min-height: 52px; border-radius: 8px; display: flex; align-items: center; justify-content: center; padding: 3px; }
+  .slot.empty { border: 1px dashed var(--chip-line); color: var(--muted); }
+  .slot.empty .plus {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .82rem;
-    background: transparent;
-  }
-  .slot .slot-hint { text-align: center; opacity: .8; }
-
-  .canvas-count {
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .8rem; color: var(--muted); margin: 0 0 22px;
+    font-size: 1.1rem; line-height: 1; opacity: .5;
   }
 
-  /* Pool ------------------------------------------------------ */
-  .pool {
-    display: flex; flex-wrap: wrap; gap: 10px;
-    margin-bottom: 22px;
-    padding: 4px;
-    border-radius: 12px;
-    transition: background .18s ease;
-  }
+  /* Pool: compact wrapping cloud, uniform chips --------------- */
+  .pool { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 14px; padding: 2px; border-radius: 10px; transition: background .16s ease; }
   .pool.drag-over { background: var(--accent-soft); }
 
-  /* Chip: uniform styling regardless of quality tier ---------- */
   .chip {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .9rem; line-height: 1.3;
-    text-align: left;
-    background: var(--chip);
-    color: var(--ink);
-    border: 1px solid var(--chip-line);
-    border-radius: 10px;
-    padding: 11px 14px;
-    cursor: pointer;
-    width: 100%;
-    transition: border-color .16s ease, background .16s ease, transform .1s ease, box-shadow .16s ease, opacity .16s ease;
+    font-size: .8rem; line-height: 1.25; text-align: left;
+    background: var(--chip); color: var(--ink);
+    border: 1px solid var(--chip-line); border-radius: 9px;
+    padding: 8px 11px; cursor: pointer;
+    transition: border-color .14s ease, background .14s ease, transform .1s ease, opacity .14s ease;
   }
-  @media (min-width: 480px) { .chip { width: auto; max-width: 240px; } }
   .chip:hover { border-color: var(--accent); background: var(--accent-soft); }
   .chip:active { transform: translateY(1px); }
-  .chip[aria-disabled="true"] {
-    opacity: .5; cursor: not-allowed; border-style: dashed;
-  }
+  .chip[aria-disabled="true"] { opacity: .45; cursor: not-allowed; border-style: dashed; }
   .chip[aria-disabled="true"]:hover { border-color: var(--chip-line); background: var(--chip); }
   .chip .na {
-    display: block; margin-top: 3px;
-    font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; color: var(--muted);
+    display: block; margin-top: 1px; font-size: .62rem; letter-spacing: .03em; text-transform: uppercase; color: var(--muted);
   }
+
   .chip.in-canvas {
-    width: 100%; max-width: none; height: 100%;
-    border-color: var(--accent);
-    background: var(--accent-soft);
-    display: flex; align-items: center; gap: 8px;
+    width: 100%; height: 100%;
+    display: flex; align-items: flex-start; gap: 5px;
+    border-color: var(--accent); background: var(--accent-soft);
+    font-size: .75rem; padding: 7px 8px;
   }
-  .chip.in-canvas .x {
-    margin-left: auto; font-weight: 700; color: var(--accent); font-size: 1rem; line-height: 1;
-  }
+  .chip.in-canvas .lbl { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+  .chip.in-canvas .x { font-weight: 700; color: var(--accent); font-size: .95rem; line-height: 1; }
   .chip.dragging { opacity: .4; }
 
   /* Buttons --------------------------------------------------- */
-  .nav-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 6px; }
+  .nav-row { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
   button.primary {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-weight: 600; font-size: .98rem;
-    background: var(--accent); color: var(--accent-ink);
-    border: 1px solid var(--accent); border-radius: 10px;
-    padding: 12px 22px; cursor: pointer;
-    transition: transform .12s ease, filter .18s ease, opacity .18s ease;
+    font-weight: 600; font-size: .92rem; background: var(--accent); color: var(--accent-ink);
+    border: 1px solid var(--accent); border-radius: 9px; padding: 10px 18px; cursor: pointer;
+    transition: transform .12s ease, filter .16s ease, opacity .16s ease;
   }
   button.primary:hover { filter: brightness(1.06); }
   button.primary:active { transform: translateY(1px); }
   button.primary:disabled { opacity: .4; cursor: not-allowed; filter: none; }
   button.ghost {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-weight: 600; font-size: .9rem;
-    background: transparent; color: var(--muted);
-    border: 1px solid var(--line); border-radius: 10px;
-    padding: 11px 18px; cursor: pointer;
-    transition: border-color .18s ease, color .18s ease;
+    font-weight: 600; font-size: .84rem; background: transparent; color: var(--muted);
+    border: 1px solid var(--line); border-radius: 9px; padding: 9px 15px; cursor: pointer;
+    transition: border-color .16s ease, color .16s ease;
   }
   button.ghost:hover { color: var(--ink); border-color: var(--accent); }
 
-  a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
-    outline: 3px solid var(--focus); outline-offset: 2px;
-  }
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
 
   /* Feedback -------------------------------------------------- */
-  .fb-item {
-    border: 1px solid var(--line); border-radius: 12px;
-    padding: 14px 16px; margin-bottom: 12px; background: var(--panel);
-  }
-  .fb-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 4px; }
-  .fb-name { font-weight: 600; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .96rem; }
+  .fb-item { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin-bottom: 8px; }
+  .fb-top { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 3px; }
+  .fb-name { font-weight: 600; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .9rem; }
   .fb-badge {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .66rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-    padding: 2px 9px; border-radius: 99px; border: 1px solid currentColor;
+    font-size: .6rem; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap;
   }
   .fb-badge.strong { color: var(--strong); }
   .fb-badge.workable { color: var(--workable); }
   .fb-badge.weak { color: var(--weak); }
-  .fb-note { margin: 0; font-size: 1rem; }
+  .fb-note { margin: 0; font-size: .92rem; }
 
-  .combo {
-    background: var(--accent-soft); border-radius: 12px;
-    padding: 16px 18px; margin: 18px 0 24px;
-  }
-  .combo .section-label { color: var(--accent); }
-  .combo p { margin: 0; font-size: 1.04rem; }
+  .combo { background: var(--accent-soft); border-radius: 10px; padding: 12px 14px; margin: 12px 0 16px; }
+  .combo .section-label { color: var(--accent); display: block; }
+  .combo p { margin: 0; font-size: .98rem; }
 
   /* Closing --------------------------------------------------- */
-  .reuse-item { margin-bottom: 14px; padding-left: 14px; border-left: 3px solid var(--line); }
+  .reuse-item { margin-bottom: 10px; padding-left: 11px; border-left: 3px solid var(--line); font-size: .94rem; }
   .reuse-item .rlabel { font-weight: 600; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  .reflection {
-    background: var(--accent-soft); border-radius: 12px; padding: 18px 20px; margin: 8px 0 22px;
-  }
-  .reflection .q { font-size: clamp(1.05rem, 2.8vw, 1.16rem); margin: 0 0 14px; }
-  .copy-note { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .8rem; color: var(--muted); margin-left: 4px; }
-  .footnote {
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    font-size: .78rem; color: var(--muted); margin-top: 28px; line-height: 1.5;
-  }
+  .reflection { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; margin: 8px 0 14px; }
+  .reflection .q { font-size: 1.02rem; margin: 0 0 12px; }
+  .copy-note { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .78rem; color: var(--muted); margin-left: 4px; }
+  .footnote { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .72rem; color: var(--muted); margin-top: 18px; line-height: 1.45; }
 
-  .intro-meta { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .82rem; color: var(--muted); margin: 20px 0 24px; }
-  .intro-meta li { margin-bottom: 4px; }
-
-  .fade-enter { animation: fadein .34s ease both; }
-  @keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
+  .fade-enter { animation: fadein .3s ease both; }
+  @keyframes fadein { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
   .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -292,44 +216,45 @@
 /* ================================================================
    BUILD THE LESSON
    A drag-and-drop constructivism activity. The same 10 strategies are
-   re-tiered across three teaching contexts to show that facilitation
-   and scaffolding are NOT portable the way content and endpoints are.
+   re-tiered across three K-12 teaching contexts to show that
+   facilitation and scaffolding are NOT portable the way content and
+   endpoints are.
 
    ----------------------------------------------------------------
    ALL EDITABLE CONTENT LIVES IN THE TWO DATA STRUCTURES BELOW:
      • STRATEGIES  — the one shared pool of 10 chips (labels + function)
      • SCENARIOS   — the 3 contexts, each re-tiering all 10 strategies
                      with its own one-sentence feedback note.
-   Your group can edit wording, tiers, and notes WITHOUT touching the
-   logic below the "ENGINE" banner. See README.md.
+   Edit wording, tiers, and notes WITHOUT touching the logic below the
+   "ENGINE" banner. See README.md.
 
    TIERS (per scenario, per strategy):
      "strong"      — a strong fit here
      "workable"    — a real, defensible tradeoff here (not a mistake)
      "weak"        — weak or actively counterproductive here
-     "unavailable" — the strategy has no medium in this context; the
-                     chip is shown but cannot be placed (used for
-                     "circulate and listen" in a fully async course)
+     "unavailable" — no medium in this context; the chip shows but
+                     can't be placed (used for "circulate & listen"
+                     in a fully async course)
    Design target per scenario: 3 strong, 3 workable, 4 weak
-   (online replaces one weak with one unavailable).
+   (online swaps one weak for one unavailable).
    ================================================================ */
 
   /* ----- The single shared pool of 10 strategies -------------
+     Keep chip labels SHORT — they must fit a 3-across canvas at 360px.
      `func` groups strategies by the job they do, so the engine can
-     comment on the COMBINATION (e.g. "nothing here reads where
-     learners are"). Functions: anchor, collab, ownership, presence,
-     diagnosis, compliance, transmission. */
+     comment on the COMBINATION. Functions: anchor, collab, ownership,
+     presence, diagnosis, compliance, transmission. */
   const STRATEGIES = [
-    { id: 1,  func: "anchor",       label: "Open problem, no single right answer" },
-    { id: 2,  func: "collab",       label: "Whole-class debate on a contested question" },
-    { id: 3,  func: "collab",       label: "Small-group breakout with a shared task" },
-    { id: 4,  func: "collab",       label: "Co-edited shared artifact (wiki or doc)" },
-    { id: 5,  func: "ownership",    label: "Discussion topics negotiated with learners" },
-    { id: 6,  func: "presence",     label: "Instructor intro video + student intro posts" },
-    { id: 7,  func: "diagnosis",    label: "Fast individual feedback on every submission" },
-    { id: 8,  func: "diagnosis",    label: "Circulate and listen in on group talk" },
-    { id: 9,  func: "compliance",   label: "Required graded weekly discussion posts" },
-    { id: 10, func: "transmission", label: "Recorded lecture + comprehension quiz" }
+    { id: 1,  func: "anchor",       label: "Open-ended problem" },
+    { id: 2,  func: "collab",       label: "Whole-class debate" },
+    { id: 3,  func: "collab",       label: "Small-group task" },
+    { id: 4,  func: "collab",       label: "Co-edited class doc" },
+    { id: 5,  func: "ownership",    label: "Student-chosen topics" },
+    { id: 6,  func: "presence",     label: "Intro video + posts" },
+    { id: 7,  func: "diagnosis",    label: "Fast 1:1 feedback" },
+    { id: 8,  func: "diagnosis",    label: "Circulate & listen in" },
+    { id: 9,  func: "compliance",   label: "Required weekly posts" },
+    { id: 10, func: "transmission", label: "Lecture + quiz" }
   ];
 
   /* Plain-language names for each function, used in combination feedback. */
@@ -343,25 +268,25 @@
     transmission: "content delivery"
   };
 
-  /* ----- The 3 scenarios. `short` is used on the closing screen.
-     `tiers` maps EVERY strategy id -> { tier, note }. -------- */
+  /* ----- The 3 K-12 scenarios. `short` is used on the closing
+     screen. `tiers` maps EVERY strategy id -> { tier, note }. --- */
   const SCENARIOS = [
     {
       id: "online",
       mode: "Fully online · asynchronous",
       short: "online",
-      title: "Intro to Sociology",
-      setup: "Working adults, fully asynchronous — no live sessions, one module per week. Everything happens in text, on their own time.",
+      title: "7th-Grade Language Arts",
+      setup: "A fully online middle school. Students work through a weekly reading-and-writing module asynchronously — no live class, everything in text, on their own schedule.",
       tiers: {
-        1:  { tier: "strong",      note: "An open problem gives the whole asynchronous week a shared anchor to return to, and it travels perfectly into a text-based space." },
-        4:  { tier: "strong",      note: "A co-edited artifact turns asynchronous time into an advantage — meaning accumulates in one place everyone can see and revise." },
-        6:  { tier: "strong",      note: "Online, an intro video and student posts do the essential work of building the social presence a shared room would otherwise give you for free." },
-        5:  { tier: "workable",    note: "Negotiating topics builds ownership, but doing it well asynchronously takes steady facilitation between modules — a real tradeoff, not a mistake." },
-        3:  { tier: "workable",    note: "Breakouts can work asynchronously, but coordinating a shared task across everyone's schedules is genuine overhead." },
-        7:  { tier: "workable",    note: "Fast individual feedback is supportive and easy to deliver here, but it reads one learner at a time rather than building shared understanding." },
+        1:  { tier: "strong",      note: "An open-ended prompt gives the whole asynchronous week a shared anchor to return to, and it travels perfectly into a text space." },
+        4:  { tier: "strong",      note: "A co-edited class doc turns asynchronous time into an advantage — the writing accumulates in one place everyone can see and revise." },
+        6:  { tier: "strong",      note: "Online, an intro video and student posts build the social presence a shared classroom would otherwise give you for free." },
+        5:  { tier: "workable",    note: "Letting students help choose topics builds ownership, but doing it well asynchronously takes steady facilitation between modules." },
+        3:  { tier: "workable",    note: "A small-group task can work asynchronously, but coordinating it across everyone's schedules is genuine overhead." },
+        7:  { tier: "workable",    note: "Fast individual feedback is supportive and easy to deliver here, but it reaches one student at a time rather than building shared understanding." },
         2:  { tier: "weak",        note: "A whole-class debate loses its live, contested energy when it's stretched across days of serial posting." },
-        9:  { tier: "weak",        note: "Required graded posts reliably produce posts, but they tend to manufacture compliance that resembles discussion without becoming it." },
-        10: { tier: "weak",        note: "A recorded lecture and quiz is efficient transmission — it delivers content but leaves learners to construct nothing." },
+        9:  { tier: "weak",        note: "Required weekly posts reliably produce posts, but they tend to manufacture compliance that resembles discussion without becoming it." },
+        10: { tier: "weak",        note: "A recorded lecture and quiz is efficient transmission — it delivers content but leaves students to construct nothing." },
         8:  { tier: "unavailable", note: "There's no live group talk to circulate through in an asynchronous course — this move has no medium here." }
       }
     },
@@ -370,42 +295,42 @@
       mode: "In person · one class period",
       short: "in person",
       title: "10th-Grade Biology Lab",
-      setup: "One lab section, a single 50-minute period, and no required student tech. High energy, tight clock, everyone in the same room.",
+      setup: "One lab section, a single 50-minute period, and no required student devices. High energy, tight clock, everyone in the same room.",
       tiers: {
         2:  { tier: "strong",   note: "A live whole-class debate uses the room's energy and turn-taking exactly as they're meant to be used." },
-        3:  { tier: "strong",   note: "In-person breakouts are high-bandwidth — students negotiate a shared task fluidly through talk, gesture, and shared materials." },
-        8:  { tier: "strong",   note: "Circulating and listening is real-time diagnosis — it's how you read where each group's thinking actually sits and scaffold on the spot." },
+        3:  { tier: "strong",   note: "In-person small groups are high-bandwidth — students negotiate a shared task fluidly through talk, gesture, and shared materials." },
+        8:  { tier: "strong",   note: "Circulating and listening is real-time diagnosis — it's how you read where each group's thinking sits and scaffold on the spot." },
         1:  { tier: "workable", note: "A genuinely open problem is powerful, but in one 50-minute period it needs tight facilitation to keep from running out the clock." },
-        5:  { tier: "workable", note: "Negotiating topics builds ownership, but a single fixed period leaves little room to renegotiate much of anything." },
+        5:  { tier: "workable", note: "Letting students help choose topics builds ownership, but a single fixed period leaves little room to renegotiate much." },
         7:  { tier: "workable", note: "Individual feedback is valuable, but delivering it fast to a whole lab inside 50 minutes is a real stretch." },
-        6:  { tier: "weak",     note: "An intro video and intro posts are largely redundant when everyone is already together in the same room." },
-        4:  { tier: "weak",     note: "A co-edited digital artifact fights the setting when there's no required tech and only 50 minutes in the room." },
-        9:  { tier: "weak",     note: "Graded weekly posts bolt a compliance layer onto a hands-on lab that has little to do with what happens in it." },
+        6:  { tier: "weak",     note: "An intro video and posts are largely redundant when everyone is already together in the same room." },
+        4:  { tier: "weak",     note: "A co-edited digital doc fights the setting when there's no required tech and only 50 minutes in the room." },
+        9:  { tier: "weak",     note: "Required weekly posts bolt a compliance layer onto a hands-on lab that has little to do with what happens in it." },
         10: { tier: "weak",     note: "Lecturing then quizzing converts an active lab into content delivery — efficient, but it constructs nothing." }
       }
     },
     {
       id: "hybrid",
-      mode: "Hybrid · in-person + async, some remote",
-      short: "the hybrid studio",
-      title: "Undergraduate Design Studio",
-      setup: "Meets in person weekly with asynchronous work between sessions, and a few students always join remotely. Two modes running at once.",
+      mode: "Blended · in-person + online, some remote",
+      short: "the blended class",
+      title: "9th-Grade U.S. History",
+      setup: "A blended class: students meet in person most days but do project work online between sessions, and a few classmates join remotely each day.",
       tiers: {
-        1:  { tier: "strong",   note: "An open design problem is the portable spine of the course — it drives the in-person critiques and the between-session work alike." },
-        4:  { tier: "strong",   note: "A co-edited artifact is the connective tissue of a hybrid course — it holds the work steady across the in-person and asynchronous halves." },
-        5:  { tier: "strong",   note: "Negotiated topics give a studio genuine ownership, and they carry equally well into both the in-person and online sides." },
-        3:  { tier: "workable", note: "Breakouts work in a hybrid studio, but mixed in-person and remote groups carry a coordination cost you have to actively manage." },
-        6:  { tier: "workable", note: "An intro video and posts help remote students feel present, though they partly duplicate what the weekly in-person meeting already does." },
-        7:  { tier: "workable", note: "Fast individual feedback supports everyone, but on its own it reads learners one at a time rather than connecting the two modes." },
-        2:  { tier: "weak",     note: "A whole-class debate across co-located and remote students usually breaks on audio and turn-taking, leaving the remote half stranded." },
+        1:  { tier: "strong",   note: "An open-ended driving question is the portable spine of the unit — it powers the in-class discussion and the online project work alike." },
+        4:  { tier: "strong",   note: "A co-edited class doc is the connective tissue of a blended class — it holds the work steady across the in-person and online halves." },
+        5:  { tier: "strong",   note: "Letting students help choose topics gives the class genuine ownership, and it carries equally well into both sides." },
+        3:  { tier: "workable", note: "Small-group tasks work in a blended class, but mixing in-person and remote students carries a coordination cost you have to manage." },
+        6:  { tier: "workable", note: "An intro video and posts help remote students feel present, though they partly duplicate what the daily in-person meeting already does." },
+        7:  { tier: "workable", note: "Fast individual feedback supports everyone, but on its own it reaches students one at a time rather than connecting the two modes." },
+        2:  { tier: "weak",     note: "A whole-class debate across in-room and remote students usually breaks on audio and turn-taking, leaving the remote kids stranded." },
         8:  { tier: "weak",     note: "Circulating the room only reads the students physically present — it quietly leaves your remote learners undiagnosed." },
-        9:  { tier: "weak",     note: "Required graded posts add compliance that resembles participation without producing the studio's collaborative work." },
+        9:  { tier: "weak",     note: "Required weekly posts add compliance that resembles participation without producing the class's collaborative work." },
         10: { tier: "weak",     note: "A recorded lecture and quiz delivers content to both modes equally, and builds understanding in neither." }
       }
     }
   ];
 
-  const TIER_LABEL = { strong: "Strong fit", workable: "Workable — a tradeoff", weak: "Weak fit here", unavailable: "Unavailable here" };
+  const TIER_LABEL = { strong: "Strong fit", workable: "Workable", weak: "Weak fit", unavailable: "Unavailable" };
 
   /* ================================================================
      ENGINE — content editors normally don't need to change below.
@@ -416,11 +341,7 @@
   const progressLabel = document.getElementById("progressLabel");
   const stratById = id => STRATEGIES.find(s => s.id === id);
 
-  const state = {
-    index: -1,                 // -1 intro; 0..2 scenarios; 3 closing
-    selected: [],              // ids currently on the canvas (this scenario)
-    history: []                // [{scenarioId, short, chosen:[{id,tier}]}]
-  };
+  const state = { index: -1, selected: [], history: [] };
 
   function setProgress() {
     const n = SCENARIOS.length;
@@ -457,17 +378,13 @@
     s.appendChild(el("p", { class: "kicker", text: "A constructivism activity" }));
     s.appendChild(el("h1", { class: "title", tabindex: "-1", "data-autofocus": "", text: "Build the Lesson" }));
     s.appendChild(el("p", { class: "lede", html:
-      "You get a teaching scenario and one pool of ten strategies. <strong>Drag or tap three</strong> into the lesson canvas, then see how your combination fits." }));
+      "One pool of ten strategies, three K-12 classrooms. <strong>Tap or drag three</strong> strategies into each lesson, then see how the combination fits." }));
     s.appendChild(el("p", { class: "setup", html:
-      "Here's the catch: the <em>same</em> ten strategies come back for all three scenarios — online, in person, and hybrid — and they're re-ranked each time. A move that's excellent in one room can be inert in another. That gap is the whole point." }));
-    const meta = el("ul", { class: "intro-meta" });
-    ["Three scenarios, about 5–8 minutes.",
-     "No score and no single right answer — several combinations work.",
-     "Tap a chip to place it, tap it again to send it back. Full drag-and-drop too."
-    ].forEach(t => meta.appendChild(el("li", { text: t })));
-    s.appendChild(meta);
+      "The catch: the <em>same</em> ten strategies return for every scenario — online, in person, and blended — re-ranked each time. A move that shines in one room can fall flat in another. That gap is the point." }));
+    s.appendChild(el("p", { class: "tiny-hint", text:
+      "No score, no single right answer. Tap a chip to place it, tap again to send it back — works on touch, mouse, or keyboard." }));
     const row = el("div", { class: "nav-row" });
-    const b = el("button", { class: "primary", type: "button", text: "Start with the first scenario →" });
+    const b = el("button", { class: "primary", type: "button", text: "Start →" });
     b.addEventListener("click", () => { state.index = 0; state.selected = []; renderScenario(); });
     row.appendChild(b);
     s.appendChild(row);
@@ -485,30 +402,29 @@
     s.appendChild(el("h2", { class: "stitle", tabindex: "-1", "data-autofocus": "", text: sc.title }));
     s.appendChild(el("p", { class: "setup", text: sc.setup }));
 
-    /* Canvas */
-    s.appendChild(el("p", { class: "section-label", text: "Your lesson — place 3 strategies" }));
+    /* Canvas + inline count */
+    const canvasLabel = el("p", { class: "section-label" });
+    canvasLabel.appendChild(el("span", { text: "Your lesson — place 3" }));
+    canvasLabel.appendChild(el("span", { class: "count", id: "canvasCount", "aria-live": "polite", text: "0 of 3" }));
+    s.appendChild(canvasLabel);
     const canvas = el("div", { class: "canvas", id: "canvas", role: "list", "aria-label": "Lesson canvas, 3 slots" });
     s.appendChild(canvas);
-    const count = el("p", { class: "canvas-count", id: "canvasCount", "aria-live": "polite" });
-    s.appendChild(count);
 
     /* Pool */
-    s.appendChild(el("p", { class: "section-label", text: "Strategy pool" }));
+    s.appendChild(el("p", { class: "section-label" }, [ el("span", { text: "Strategy pool" }) ]));
     const pool = el("div", { class: "pool", id: "pool", role: "list", "aria-label": "Strategy pool" });
     s.appendChild(pool);
 
     /* Submit */
     const row = el("div", { class: "nav-row" });
-    const submit = el("button", { class: "primary", id: "submitBtn", type: "button", disabled: "", text: "See how this lesson fits →" });
+    const submit = el("button", { class: "primary", id: "submitBtn", type: "button", disabled: "", text: "See how this fits →" });
     submit.addEventListener("click", () => renderFeedback());
     row.appendChild(submit);
     s.appendChild(row);
 
-    /* Canvas as a drop target for chips dragged from the pool. */
     canvas.addEventListener("dragover", e => { if (dragId != null) { e.preventDefault(); canvas.classList.add("drag-over"); } });
     canvas.addEventListener("dragleave", () => canvas.classList.remove("drag-over"));
     canvas.addEventListener("drop", e => { e.preventDefault(); canvas.classList.remove("drag-over"); if (dragId != null) placeStrategy(dragId); });
-    /* Pool as a drop target for chips dragged back out of the canvas. */
     pool.addEventListener("dragover", e => { if (dragId != null) { e.preventDefault(); pool.classList.add("drag-over"); } });
     pool.addEventListener("dragleave", () => pool.classList.remove("drag-over"));
     pool.addEventListener("drop", e => { e.preventDefault(); pool.classList.remove("drag-over"); if (dragId != null) removeStrategy(dragId); });
@@ -517,9 +433,8 @@
     paintBoard();
   }
 
-  let dragId = null; // id currently being dragged (null when not dragging)
+  let dragId = null;
 
-  /* Re-render pool + canvas from state.selected. */
   function paintBoard() {
     const sc = SCENARIOS[state.index];
     const pool = document.getElementById("pool");
@@ -529,18 +444,14 @@
     pool.innerHTML = "";
     canvas.innerHTML = "";
 
-    /* Pool chips: every strategy not currently on the canvas. */
     STRATEGIES.forEach(strat => {
       if (state.selected.includes(strat.id)) return;
       const tierInfo = sc.tiers[strat.id];
       const unavailable = tierInfo.tier === "unavailable";
-      const chip = el("button", {
-        class: "chip", type: "button", role: "listitem",
-        "aria-disabled": unavailable ? "true" : "false"
-      });
+      const chip = el("button", { class: "chip", type: "button", role: "listitem", "aria-disabled": unavailable ? "true" : "false" });
       chip.appendChild(document.createTextNode(strat.label));
       if (unavailable) {
-        chip.appendChild(el("span", { class: "na", text: "Not available in this setting" }));
+        chip.appendChild(el("span", { class: "na", text: "n/a here" }));
         chip.setAttribute("aria-label", strat.label + " — not available in this setting");
       } else {
         chip.setAttribute("draggable", "true");
@@ -552,12 +463,12 @@
       pool.appendChild(chip);
     });
 
-    /* Canvas: 3 slots, filled in selection order. */
     for (let i = 0; i < 3; i++) {
       const id = state.selected[i];
       if (id == null) {
         const slot = el("div", { class: "slot empty", role: "listitem" }, [
-          el("span", { class: "slot-hint", text: "Slot " + (i + 1) + " — empty" })
+          el("span", { class: "plus", "aria-hidden": "true", text: "+" }),
+          el("span", { class: "sr-only", text: "Slot " + (i + 1) + " empty" })
         ]);
         canvas.appendChild(slot);
       } else {
@@ -565,7 +476,7 @@
         const slot = el("div", { class: "slot", role: "listitem" });
         const chip = el("button", { class: "chip in-canvas", type: "button", draggable: "true",
           "aria-label": strat.label + " — activate to remove from your lesson" });
-        chip.appendChild(document.createTextNode(strat.label));
+        chip.appendChild(el("span", { class: "lbl", text: strat.label }));
         chip.appendChild(el("span", { class: "x", "aria-hidden": "true", text: "×" }));
         chip.addEventListener("click", () => removeStrategy(id));
         chip.addEventListener("dragstart", () => { dragId = id; chip.classList.add("dragging"); });
@@ -576,7 +487,8 @@
     }
 
     const n = state.selected.length;
-    count.textContent = n === 3 ? "3 of 3 placed — ready." : n + " of 3 placed.";
+    count.textContent = n + " of 3";
+    count.classList.toggle("ready", n === 3);
     submit.disabled = n !== 3;
   }
 
@@ -587,39 +499,29 @@
     if (state.selected.length >= 3) return;
     state.selected.push(id);
     paintBoard();
-    focusChipInCanvas(id);
+    focusChip("#canvas .chip.in-canvas .lbl", id, true);
   }
-
   function removeStrategy(id) {
     const i = state.selected.indexOf(id);
     if (i === -1) return;
     state.selected.splice(i, 1);
     paintBoard();
-    focusChipInPool(id);
+    focusChip("#pool .chip", id, false);
   }
-
-  /* Keep keyboard focus sensible after a chip moves. */
-  function focusChipInCanvas(id) {
+  function focusChip(sel, id, inner) {
     const strat = stratById(id);
-    const btns = document.querySelectorAll("#canvas .chip.in-canvas");
-    for (const b of btns) if (b.textContent.indexOf(strat.label) === 0) { b.focus(); return; }
-  }
-  function focusChipInPool(id) {
-    const strat = stratById(id);
-    const btns = document.querySelectorAll("#pool .chip");
-    for (const b of btns) if (b.textContent.indexOf(strat.label) === 0) { b.focus(); return; }
+    const nodes = document.querySelectorAll(sel);
+    for (const node of nodes) {
+      const text = inner ? node.textContent : node.childNodes[0] && node.childNodes[0].textContent;
+      if (text === strat.label) { (inner ? node.closest(".chip") : node).focus(); return; }
+    }
   }
 
   /* ---------- Feedback ---------- */
   function renderFeedback() {
     const sc = SCENARIOS[state.index];
     const chosen = state.selected.slice();
-
-    /* Record for the closing screen. */
-    state.history[state.index] = {
-      scenarioId: sc.id, short: sc.short,
-      chosen: chosen.map(id => ({ id, tier: sc.tiers[id].tier }))
-    };
+    state.history[state.index] = { scenarioId: sc.id, short: sc.short, chosen: chosen.map(id => ({ id, tier: sc.tiers[id].tier })) };
 
     const s = el("section", { class: "scene" });
     s.appendChild(el("span", { class: "mode-tag", text: sc.mode }));
@@ -644,23 +546,16 @@
 
     const row = el("div", { class: "nav-row" });
     const isLast = state.index >= SCENARIOS.length - 1;
-    const next = el("button", { class: "primary", type: "button",
-      text: isLast ? "See how your choices traveled →" : "Next scenario →" });
-    next.addEventListener("click", () => {
-      state.index += 1;
-      if (state.index >= SCENARIOS.length) renderClosing();
-      else renderScenario();
-    });
+    const next = el("button", { class: "primary", type: "button", text: isLast ? "See your results →" : "Next scenario →" });
+    next.addEventListener("click", () => { state.index += 1; if (state.index >= SCENARIOS.length) renderClosing(); else renderScenario(); });
     row.appendChild(next);
-    const back = el("button", { class: "ghost", type: "button", text: "← Rebuild this lesson" });
+    const back = el("button", { class: "ghost", type: "button", text: "← Rebuild" });
     back.addEventListener("click", () => renderScenario());
     row.appendChild(back);
     s.appendChild(row);
-
     mount(s);
   }
 
-  /* One qualitative sentence about the combination as a whole. */
   function comboFeedback(sc, chosen) {
     const funcs = chosen.map(id => stratById(id).func);
     const tiers = chosen.map(id => sc.tiers[id].tier);
@@ -671,16 +566,14 @@
     const hasTransmission = funcs.includes("transmission");
     const hasCompliance = funcs.includes("compliance");
 
-    /* All three do the same job → redundancy is the headline. */
     if (uniqueFuncs.length === 1) {
-      return "All three of your picks do essentially the same job — " + FUNC_LABEL[uniqueFuncs[0]] +
+      return "All three picks do essentially the same job — " + FUNC_LABEL[uniqueFuncs[0]] +
         " — so the lesson leans hard on one function and leaves the others uncovered; a constructivist lesson usually needs a few working together.";
     }
-
     const clauses = [];
     if (!hasDiagnosis) clauses.push("nothing here reads where learners actually are, so any scaffolding is running a little blind");
-    if (hasTransmission) clauses.push("the recorded-lecture-and-quiz piece pulls the set toward delivery rather than construction");
-    if (hasCompliance) clauses.push("the required-graded-posts piece adds compliance that can look like engagement without producing it");
+    if (hasTransmission) clauses.push("the lecture-and-quiz piece pulls the set toward delivery rather than construction");
+    if (hasCompliance) clauses.push("the required-posts piece adds compliance that can look like engagement without producing it");
 
     let lead;
     if (weakN === 0 && strongN === 3) lead = "Three strong fits that genuinely complement each other";
@@ -691,7 +584,6 @@
     if (clauses.length === 0) return lead + ", and it spreads across more than one function, which is what a constructivist lesson needs.";
     return lead + ", but " + joinClauses(clauses) + ".";
   }
-
   function joinClauses(arr) {
     if (arr.length === 1) return arr[0];
     if (arr.length === 2) return arr[0] + ", and " + arr[1];
@@ -707,16 +599,13 @@
     s.appendChild(el("p", { class: "setup", html:
       "Constructivist <em>content and endpoints</em> port across settings. Facilitation and scaffolding don't. Here's what happened to the strategies you reused." }));
 
-    /* Which strategy ids appear in more than one scenario. */
-    const usage = {}; // id -> [{short, tier}]
-    state.history.forEach(h => h && h.chosen.forEach(c => {
-      (usage[c.id] = usage[c.id] || []).push({ short: h.short, tier: c.tier });
-    }));
+    const usage = {};
+    state.history.forEach(h => h && h.chosen.forEach(c => { (usage[c.id] = usage[c.id] || []).push({ short: h.short, tier: c.tier }); }));
     const reused = Object.keys(usage).map(Number).filter(id => usage[id].length >= 2);
 
     if (reused.length === 0) {
       s.appendChild(el("p", { class: "setup", text:
-        "You built a different set for every scenario — you never once reused a strategy. That instinct, re-deriving the facilitation for each context instead of porting it, is exactly the thesis of this activity." }));
+        "You built a different set for every scenario — you never reused a strategy. Re-deriving the facilitation for each context instead of porting it is exactly the thesis of this activity." }));
     } else {
       reused.forEach(id => {
         const strat = stratById(id);
@@ -726,12 +615,11 @@
         const allWeak = tiers.every(t => t === "weak");
         let verdict;
         if (allGood) verdict = "Same strategy, and it genuinely traveled.";
-        else if (allWeak) verdict = "It underdelivered every time you used it — worth asking why it kept feeling like the safe pick.";
+        else if (allWeak) verdict = "It underdelivered every time — worth asking why it kept feeling like the safe pick.";
         else verdict = "Same strategy, very different value depending on the room — which is the whole point.";
         const where = uses.map(u => tierWord(u.tier) + " " + u.short).join(", then ");
         const item = el("div", { class: "reuse-item" });
-        item.appendChild(el("p", { html: "<span class='rlabel'>" + escapeHtml(strat.label) + "</span> — you reused it in " +
-          uses.length + " settings (" + where + "). " + verdict, style: "margin:0" }));
+        item.appendChild(el("p", { html: "<span class='rlabel'>" + escapeHtml(strat.label) + "</span> — reused in " + uses.length + " settings (" + where + "). " + verdict, style: "margin:0" }));
         s.appendChild(item);
       });
     }
@@ -750,23 +638,20 @@
     s.appendChild(reflection);
 
     const row = el("div", { class: "nav-row" });
-    const restart = el("button", { class: "ghost", type: "button", text: "↺ Build all three again" });
+    const restart = el("button", { class: "ghost", type: "button", text: "↺ Start over" });
     restart.addEventListener("click", () => { state.index = -1; state.selected = []; state.history = []; renderIntro(); });
     row.appendChild(restart);
     s.appendChild(row);
 
     s.appendChild(el("p", { class: "footnote", html:
-      "This activity draws on ideas from Powell &amp; Kalina (2009), Singh, Steele &amp; Singh (2021), Schrader (2015), Gulati (2008), and von Glasersfeld (2008). Principles are named in plain language; formal citations accompany the presentation." }));
+      "Draws on ideas from Powell &amp; Kalina (2009), Singh, Steele &amp; Singh (2021), Schrader (2015), Gulati (2008), and von Glasersfeld (2008). Principles are named in plain language; formal citations accompany the presentation." }));
 
     mount(s);
   }
-
   function tierWord(t) { return t === "strong" ? "strong" : t === "workable" ? "workable" : "weak"; }
 
   /* ---------- Helpers ---------- */
-  function escapeHtml(str) {
-    return str.replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m]));
-  }
+  function escapeHtml(str) { return str.replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
   function copyText(text, noteEl) {
     const done = () => { noteEl.textContent = "Copied ✓"; setTimeout(() => { noteEl.textContent = ""; }, 2600); };
     const fail = () => {
