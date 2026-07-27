@@ -92,6 +92,13 @@
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     font-size: .74rem; color: var(--muted); margin: 0 0 14px;
   }
+  .task-prompt {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: .85rem; line-height: 1.4; color: var(--ink);
+    background: var(--accent-soft); border-left: 3px solid var(--accent);
+    border-radius: 8px; padding: 10px 12px; margin: 0 0 14px;
+  }
+  .task-prompt strong { color: var(--accent); }
 
   .section-label {
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -401,6 +408,8 @@
     s.appendChild(el("span", { class: "mode-tag", text: sc.mode }));
     s.appendChild(el("h2", { class: "stitle", tabindex: "-1", "data-autofocus": "", text: sc.title }));
     s.appendChild(el("p", { class: "setup", text: sc.setup }));
+    s.appendChild(el("p", { class: "task-prompt", html:
+      "<strong>Your task:</strong> pick the <strong>3 strategies</strong> you'd use to teach this lesson. Tap a strategy below (or drag it) to add it to a slot; tap it again to take it back. Choose all three, then select <em>See how this fits</em>." }));
 
     /* Canvas + inline count */
     const canvasLabel = el("p", { class: "section-label" });
