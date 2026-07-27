@@ -193,8 +193,6 @@
   .combo p { margin: 0; font-size: .98rem; }
 
   /* Closing --------------------------------------------------- */
-  .reuse-item { margin-bottom: 10px; padding-left: 11px; border-left: 3px solid var(--line); font-size: .94rem; }
-  .reuse-item .rlabel { font-weight: 600; font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
   .reflection { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; margin: 8px 0 14px; }
   .reflection .q { font-size: 1.02rem; margin: 0 0 12px; }
   .copy-note { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .78rem; color: var(--muted); margin-left: 4px; }
@@ -603,39 +601,15 @@
   function renderClosing() {
     setProgress();
     const s = el("section", { class: "scene" });
-    s.appendChild(el("p", { class: "kicker", text: "How your choices traveled" }));
-    s.appendChild(el("h1", { class: "title", tabindex: "-1", "data-autofocus": "", text: "Same strategies, different rooms" }));
-    s.appendChild(el("p", { class: "setup", html:
-      "Constructivist <em>content and endpoints</em> port across settings. Facilitation and scaffolding don't. Here's what happened to the strategies you reused." }));
+    s.appendChild(el("p", { class: "kicker", text: "Your summary" }));
+    s.appendChild(el("h1", { class: "title", tabindex: "-1", "data-autofocus": "", text: "How constructivist were your choices?" }));
 
-    const usage = {};
-    state.history.forEach(h => h && h.chosen.forEach(c => { (usage[c.id] = usage[c.id] || []).push({ short: h.short, tier: c.tier }); }));
-    const reused = Object.keys(usage).map(Number).filter(id => usage[id].length >= 2);
-
-    if (reused.length === 0) {
-      s.appendChild(el("p", { class: "setup", text:
-        "You built a different set for every scenario — you never reused a strategy. Re-deriving the facilitation for each context instead of porting it is exactly the thesis of this activity." }));
-    } else {
-      reused.forEach(id => {
-        const strat = stratById(id);
-        const uses = usage[id];
-        const tiers = uses.map(u => u.tier);
-        const allGood = tiers.every(t => t === "strong" || t === "workable");
-        const allWeak = tiers.every(t => t === "weak");
-        let verdict;
-        if (allGood) verdict = "Same strategy, and it genuinely traveled.";
-        else if (allWeak) verdict = "It underdelivered every time — worth asking why it kept feeling like the safe pick.";
-        else verdict = "Same strategy, very different value depending on the room — which is the whole point.";
-        const where = uses.map(u => tierWord(u.tier) + " " + u.short).join(", then ");
-        const item = el("div", { class: "reuse-item" });
-        item.appendChild(el("p", { html: "<span class='rlabel'>" + escapeHtml(strat.label) + "</span> — reused in " + uses.length + " settings (" + where + "). " + verdict, style: "margin:0" }));
-        s.appendChild(item);
-      });
-    }
+    const summary = constructivistSummary();
+    s.appendChild(el("p", { class: "setup", text: summary }));
 
     const reflection = el("div", { class: "reflection" });
     reflection.appendChild(el("p", { class: "section-label", text: "Take this to the forum" }));
-    const question = "Which strategy changed the most in value as you moved it from one setting to another — and what does that say about whether \"good teaching strategies\" are portable at all, or only good facilitation is?";
+    const question = "After building three lessons — across an online, an in-person, and a blended classroom — how constructivist were the strategies you reached for? Do you think a more (or less) constructivist approach would actually have served those particular learners better, and what in each setting shaped your instinct?";
     reflection.appendChild(el("p", { class: "q", text: question }));
     const copyRow = el("div", { class: "nav-row" });
     const copyBtn = el("button", { class: "primary", type: "button", text: "Copy the question" });
@@ -657,10 +631,24 @@
 
     mount(s);
   }
-  function tierWord(t) { return t === "strong" ? "strong" : t === "workable" ? "workable" : "weak"; }
+  /* Neutral, three-band read of how context-fitting (constructivist) the
+     nine picks were. No score — just names the pattern and leaves the
+     judgement to the participant. */
+  function constructivistSummary() {
+    const tiers = [];
+    state.history.forEach(h => h && h.chosen.forEach(c => tiers.push(c.tier)));
+    const strong = tiers.filter(t => t === "strong").length;
+    const weak = tiers.filter(t => t === "weak").length;
+    if (strong >= 5 && weak <= 2) {
+      return "Across the three classrooms, your choices leaned strongly toward strategies that fit each context — the kind of match a constructivist approach aims for, where a move is chosen for the room it's in rather than applied by default.";
+    }
+    if (weak >= 5 || strong <= 2) {
+      return "Across the three classrooms, your choices leaned toward strategies that fit these particular contexts loosely, or toward more direct, transmission- or participation-mandated approaches rather than constructivist ones.";
+    }
+    return "Across the three classrooms, your choices were a mix — some fit the context closely, others less so, and some leaned toward more direct or transmission-style approaches. Constructivist and other strategies sat side by side.";
+  }
 
   /* ---------- Helpers ---------- */
-  function escapeHtml(str) { return str.replace(/[&<>"']/g, m => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[m])); }
   function copyText(text, noteEl) {
     const done = () => { noteEl.textContent = "Copied ✓"; setTimeout(() => { noteEl.textContent = ""; }, 2600); };
     const fail = () => {
