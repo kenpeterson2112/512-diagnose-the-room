@@ -378,11 +378,11 @@
     s.appendChild(el("p", { class: "kicker", text: "A constructivism activity" }));
     s.appendChild(el("h1", { class: "title", tabindex: "-1", "data-autofocus": "", text: "Build the Lesson" }));
     s.appendChild(el("p", { class: "lede", html:
-      "One pool of ten strategies, three K-12 classrooms. <strong>Tap or drag three</strong> strategies into each lesson, then see how the combination fits." }));
+      "You will have pool of ten strategies to apply in three K-12 classrooms. <strong>Tap or drag three</strong> strategies into each lesson, then see how the combination fits." }));
     s.appendChild(el("p", { class: "setup", html:
-      "The catch: the <em>same</em> ten strategies return for every scenario — online, in person, and blended — re-ranked each time. A move that shines in one room can fall flat in another. That gap is the point." }));
+      "The <em>same</em> ten strategies return for online, in person, and blended scenarios but they will be re-ranked each time. A move that works in one room might fall flat in another. Taking time to examine these diferences is the point of this exercise." }));
     s.appendChild(el("p", { class: "tiny-hint", text:
-      "No score, no single right answer. Tap a chip to place it, tap again to send it back — works on touch, mouse, or keyboard." }));
+      "Remindr: There is no 'score' or 'right' answer to these scnearios. Make the choice that best fits your gut instinct and see where your selections fall. Retry the activity as many times as you want if you want to explore different approaches to instructional planning." }));
     const row = el("div", { class: "nav-row" });
     const b = el("button", { class: "primary", type: "button", text: "Start →" });
     b.addEventListener("click", () => { state.index = 0; state.selected = []; renderScenario(); });
