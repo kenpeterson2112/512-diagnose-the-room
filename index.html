@@ -374,9 +374,12 @@
     app.innerHTML = "";
     node.classList.add("fade-enter");
     app.appendChild(node);
+    /* Reset only THIS document's own scroll (never the iframe host's). */
+    try { window.scrollTo({ top: 0, behavior: "auto" }); } catch (e) {}
     const f = node.querySelector("[data-autofocus]");
-    if (f) f.focus();
-    window.scrollTo({ top: 0, behavior: "auto" });
+    /* preventScroll keeps keyboard/SR focus without making an iframe host
+       (e.g. Google Sites) scroll the parent page to the focused element. */
+    if (f) { try { f.focus({ preventScroll: true }); } catch (e) { f.focus(); } }
   }
 
   /* ---------- Intro ---------- */
@@ -523,7 +526,7 @@
     const nodes = document.querySelectorAll(sel);
     for (const node of nodes) {
       const text = inner ? node.textContent : node.childNodes[0] && node.childNodes[0].textContent;
-      if (text === strat.label) { (inner ? node.closest(".chip") : node).focus(); return; }
+      if (text === strat.label) { const t = inner ? node.closest(".chip") : node; try { t.focus({ preventScroll: true }); } catch (e) { t.focus(); } return; }
     }
   }
 
