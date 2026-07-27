@@ -6,9 +6,9 @@ presentation on **constructivism**.
 The visitor is handed a teaching scenario and one shared pool of ten strategies.
 They drag (or tap) exactly **three** strategies into a lesson canvas and get a
 qualitative read on how that combination fits *this* context. They do it three
-times, across three K-12 settings — a fully online middle-school Language Arts
-course, an in-person high-school biology lab, and a blended high-school U.S.
-History class with some students remote.
+times, across three BC-curriculum settings — an in-person Mathematics 5 lesson, a
+fully online Social Studies 10 course, and a blended Science 10 class with some
+students remote.
 
 **The thesis:** constructivist *content and endpoints* travel across contexts, but
 *facilitation and scaffolding* do not. The activity makes this concrete by reusing
@@ -124,12 +124,12 @@ There is **one** pool, shared by every scenario. Do not split it into three.
   id: "inperson",
   mode: "In person · one class period",   // the little grey tag
   short: "in person",                       // used on the closing screen
-  title: "10th-Grade Biology Lab",
+  title: "Mathematics 5",
   setup: "2–3 sentence setup: subject, learners, constraint.",
   tiers: {
     // EVERY strategy id must appear here, each with a tier + one-sentence note.
     8:  { tier: "strong",   note: "Circulating and listening is real-time diagnosis…" },
-    4:  { tier: "weak",     note: "A co-edited digital artifact fights the setting when…" },
+    4:  { tier: "weak",     note: "A co-edited digital doc fights the setting when…" },
     // …all ten…
   }
 }
