@@ -194,7 +194,10 @@
 
   /* Closing --------------------------------------------------- */
   .reflection { background: var(--accent-soft); border-radius: 10px; padding: 14px 16px; margin: 8px 0 14px; }
-  .reflection .q { font-size: 1.02rem; margin: 0 0 12px; }
+  .reflection .q { font-size: 1.02rem; margin: 0 0 10px; }
+  .starters { margin: 0 0 12px; padding-left: 1.15em; }
+  .starters li { font-size: .96rem; line-height: 1.4; margin-bottom: 8px; }
+  .starters li::marker { color: var(--accent); }
   .copy-note { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .78rem; color: var(--muted); margin-left: 4px; }
   .footnote { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; font-size: .72rem; color: var(--muted); margin-top: 18px; line-height: 1.45; }
 
@@ -607,14 +610,23 @@
     const summary = constructivistSummary();
     s.appendChild(el("p", { class: "setup", text: summary }));
 
+    /* Discussion-board starters (edit these to change the prompts). */
+    const STARTERS = [
+      "When is requiring participation fair — and when does it just manufacture the appearance of engagement?",
+      "In a blended class, whose learning goes unseen — and whose job is it to notice the students a strategy leaves out?",
+      "Which move changed value most between the online and in-person rooms — and does that mean there's no “best practice,” only best facilitation?"
+    ];
     const reflection = el("div", { class: "reflection" });
-    reflection.appendChild(el("p", { class: "section-label", text: "Take this to the forum" }));
-    const question = "After building three lessons — across an online, an in-person, and a blended classroom — how constructivist were the strategies you reached for? Do you think a more (or less) constructivist approach would actually have served those particular learners better, and what in each setting shaped your instinct?";
-    reflection.appendChild(el("p", { class: "q", text: question }));
+    reflection.appendChild(el("p", { class: "section-label", text: "Bring one to the discussion board" }));
+    reflection.appendChild(el("p", { class: "q", text: "Pick one of these to start — or join — a thread at the end of the module:" }));
+    const list = el("ul", { class: "starters" });
+    STARTERS.forEach(t => list.appendChild(el("li", { text: t })));
+    reflection.appendChild(list);
     const copyRow = el("div", { class: "nav-row" });
-    const copyBtn = el("button", { class: "primary", type: "button", text: "Copy the question" });
+    const copyBtn = el("button", { class: "primary", type: "button", text: "Copy these prompts" });
     const copyNote = el("span", { class: "copy-note", "aria-live": "polite", text: "" });
-    copyBtn.addEventListener("click", () => copyText(question, copyNote));
+    const copyBlob = "Discussion starters — Build the Lesson:\n\n" + STARTERS.map((t, i) => (i + 1) + ". " + t).join("\n");
+    copyBtn.addEventListener("click", () => copyText(copyBlob, copyNote));
     copyRow.appendChild(copyBtn);
     copyRow.appendChild(copyNote);
     reflection.appendChild(copyRow);
